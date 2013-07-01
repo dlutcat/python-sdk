@@ -79,7 +79,7 @@ class UpYun:
         if headers is None:
             headers = {}
         headers['Mkdir'] = 'true'
-        if checksum is True:
+        if checksum is True and 'Content-MD5' not in headers:
             headers['Content-MD5'] = self.__make_content_md5(value)
         h = self.__do_http_request('PUT', key, value, headers)
 
@@ -174,6 +174,9 @@ class UpYun:
             return hashlib.md5(value).hexdigest()
         else:
             raise UpYunClientException("object type error")
+
+    def make_content_md5(self, value):
+        self.__make_content_md5(value)
 
     def __get_meta_headers(self, headers):
         return dict(iter([(k[8:].lower(), v) for k, v in headers
